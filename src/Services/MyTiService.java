@@ -2,6 +2,7 @@ package Services;
 
 import Helpers.Common;
 import Helpers.TiReceipt;
+import Helpers.Tuple;
 import Interfaces.ITravelViewModel;
 import Models.*;
 import ViewModels.TravelViewModel;
@@ -11,6 +12,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class MyTiService {
+    private static Integer MaxCredit = 100;
+    private static Integer TopUpPrecise = 5;
+
     private UserService userService;
     private String[] tiMainMenus;
     private Map<String, Station> stations;
@@ -170,6 +174,47 @@ public class MyTiService {
     }
 
     private void handlTopup(){
+        String userId = Common.waitUsersChoice("Which user:");
+        if(!this.userService.hasUser(userId)){
+            System.out.println("Cannot find the user: " + userId);
+            return;
+        }
+        Passenger passenger = this.userService.getPassengerById(userId);
+
+        if(passenger.getBalance() >= MaxCredit){
+            System.out.println(String.format("Sorry, the max amount of credit allowed is $%.2f", (float)MaxCredit));
+            return;
+        }
+
+        while (true){
+            String userInput = Common.waitUsersChoice("How much do you want to add: ");
+            Tuple<Boolean, Integer> result = Common.convertStr2Int(userInput,true);
+            if(!result.first() || result.second() < 0){
+                System.out.println("Sorry, that is an invalid option!");
+                continue;
+            }
+
+            if(result.second() == 0){
+                break; // cancel top up
+            }
+
+            if(passenger.getBalance() + result.second() > MaxCredit){
+                System.out.println(String.format("Sorry, the max amount of credit allowed is $%.2f", (float)MaxCredit));
+                continue;
+            }
+
+            if (result.second() % TopUpPrecise != 0) {
+                System.out.println(String.format("Sorry, you can only add multiples of $%.2f", (float)TopUpPrecise));
+                continue;
+            }
+
+            float balance = passenger.getBalance() + result.second();
+            passenger.setBalance(balance);
+
+            break;
+        }
+
+        System.out.println(String.format("Your credit = $%.2f",passenger.getBalance()));
     }
 
     private void handleDisplayingBalance(){
