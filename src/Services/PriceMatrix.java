@@ -1,13 +1,11 @@
 package Services;
 
-import Helpers.PriceInfo;
+import Helpers.TiReceipt;
 import Interfaces.IPriceMatrix;
 import Models.*;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.List;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class PriceMatrix implements IPriceMatrix {
 
@@ -16,8 +14,8 @@ public class PriceMatrix implements IPriceMatrix {
     private static float SENIOR_SAT_DISCOUNT = 0.0F;
     private static float[][] prices = new float[][]{{2.5F, 3.5F}, {4.9F, 6.8F}};
 
-    public PriceInfo calculatePrice(PassengerType passengerType, TravelPass travelPass, Journey journey) {
-        PriceInfo priceInfo = new PriceInfo();
+    public TiReceipt calculatePrice(PassengerType passengerType, TravelPass travelPass, Journey journey) {
+        TiReceipt priceInfo = new TiReceipt();
         float price = 0.0F;
         float discountRate = PriceMatrix.getDiscountRate(passengerType, journey.getStartTime());
         if(null == travelPass || travelPass.getJourneies().size() <= 0) {
@@ -54,11 +52,12 @@ public class PriceMatrix implements IPriceMatrix {
         }
 
         priceInfo.setCost(price * discountRate);
+        priceInfo.setConcession(discountRate > 0.0F);
 
         return priceInfo;
     }
 
-    private static float getDiscountRate(PassengerType passengerType, Date travelDate) {
+    private static float getDiscountRate(PassengerType passengerType, LocalDateTime travelDate) {
         float discountRate = 1.0F;
         switch (passengerType) {
             case ADULT:
@@ -72,19 +71,14 @@ public class PriceMatrix implements IPriceMatrix {
                 break;
         }
 
-        LocalDate localDate = LocalDate.from(travelDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
-        if("SUNDAY".equals(localDate.getDayOfWeek().toString()) && passengerType == PassengerType.SENIOR) {
+        if("SUNDAY".equals(travelDate.getDayOfWeek().toString()) && passengerType == PassengerType.SENIOR) {
             discountRate *= SENIOR_SAT_DISCOUNT;
         }
 
         return discountRate;
     }
 
-    private static int getDifferHour(Date startDate, Date endDate) {
-        long dayM = 1000 * 24 * 60 * 60;
-        long hourM = 1000 * 60 * 60;
-        long differ = endDate.getTime() - startDate.getTime();
-        long hour = differ % dayM / hourM + 24 * (differ / dayM);
-        return Integer.parseInt(String.valueOf(hour));
+    private static long getDifferHour(LocalDateTime startDate, LocalDateTime endDate) {
+        return Duration.between(endDate, startDate).toHours();
     }
 }

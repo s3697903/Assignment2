@@ -1,9 +1,9 @@
 package Interfaces;
 
-import Helpers.PriceInfo;
+import Helpers.TiReceipt;
 import Models.*;
 
 public interface IPriceMatrix {
 
-    public PriceInfo calculatePrice(PassengerType passengerType, TravelPass travelPass, Journey journey);
+    public TiReceipt calculatePrice(PassengerType passengerType, TravelPass travelPass, Journey journey);
 }

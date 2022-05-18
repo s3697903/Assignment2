@@ -53,12 +53,21 @@ public class UserService {
         }
     }
 
+    public Passenger getPassengerById(String userId) {
+        return this.passengers.get(userId);
+    }
+
+    public float getUserBalance(String userId){
+        return this.passengers.get(userId).getBalance();
+    }
+
     private void initService() {
 
         this.passengers = new HashMap();
         this.passengerTravel = new HashMap();
 
         Passenger passenger = new Passenger("lc", "Lawrence", "Cavedon", "lawrence.cavedon@rmit.edu.au", PassengerType.SENIOR);
+        passenger.setBalance(20.0F);
         this.passengers.put(passenger.getUserId(), passenger);
 
         passenger = new Passenger("vm", "Xiang", "Li", "vuhuy.mai@rmit.edu.au", PassengerType.ADULT);

@@ -1,14 +1,13 @@
 package ViewModels;
 
-import Helpers.PriceInfo;
+import Helpers.TiReceipt;
 import Interfaces.IPriceMatrix;
 import Interfaces.ITravelViewModel;
 import Models.Journey;
 import Models.Passenger;
 import Models.TravelPass;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class TravelViewModel implements ITravelViewModel {
@@ -22,37 +21,36 @@ public class TravelViewModel implements ITravelViewModel {
         this.passenger = passenger;
     }
 
-    public boolean addNewJourney(Journey journey) {
-        if (this.passenger.getBalance() <= 0.0) {
-            return false; // not enough balance.
-        }
-
+    public TiReceipt startNewJourney(Journey journey) {
         TravelPass travelPass = this.getLastTravelInDay(journey.getStartTime());
 
         // calculate the ticket price
-        PriceInfo priceInfo = this.priceMatrix.calculatePrice(this.passenger.getUserType(),travelPass, journey);
-        float balance = passenger.getBalance() - priceInfo.getCost();
-        if(balance < 0.0F) { // no enough balance.
-            return false;
+        TiReceipt receipt = this.priceMatrix.calculatePrice(this.passenger.getUserType(), travelPass, journey);
+        if(receipt.getCost() > this.passenger.getBalance()) {
+            receipt = new TiReceipt();
+            receipt.setNoEnoughBalance(true);
+            return receipt;
         }
 
+        float balance = passenger.getBalance() - receipt.getCost();
         passenger.setBalance(balance);
-
-        if(priceInfo.getNewTicket()){
+        if(receipt.getNewTicket()){
             travelPass = new TravelPass();
+            travelPass.setTicketCost(receipt.getCost());
+            travelPass.setPassType(receipt.getPassType());
+            travelPass.setZoneType(receipt.getZoneType());
+
             String key = this.getDayTextFromDate(journey.getStartTime());
             List<TravelPass> travelPasses = new ArrayList<>();
             travelPasses.add(travelPass);
             this.travels.put(key, travelPasses);
         }
 
-        travelPass.setPassType(priceInfo.getPassType());
-        travelPass.setZoneType(priceInfo.getZoneType());
         travelPass.addJourney(journey);
-        return true;
+        return receipt;
     }
 
-    private TravelPass getLastTravelInDay(Date date) {
+    private TravelPass getLastTravelInDay(LocalDateTime date) {
         String strDate = this.getDayTextFromDate(date);
         List<TravelPass> travelPasses = this.travels.get(strDate);
         if(null == travelPasses || travelPasses.size() == 0) {
@@ -62,8 +60,7 @@ public class TravelViewModel implements ITravelViewModel {
         return travelPasses.get(travelPasses.size() - 1);
     }
 
-    private String getDayTextFromDate(Date date) {
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/YYYY");
-        return dateFormat.format(date);
+    private String getDayTextFromDate(LocalDateTime date) {
+        return date.toLocalDate().toString();
     }
 }
