@@ -12,7 +12,7 @@ import java.util.*;
 public class MyTiService {
     private UserService userService;
     private String[] tiMainMenus;
-    private List<Station> stations;
+    private Map<String, Station> stations;
     private Map<String, TravelViewModel> userTravelViewModels;
 
     public MyTiService() {
@@ -20,11 +20,10 @@ public class MyTiService {
     }
 
     public void start() {
-
-        MyTiService.printMenu("Options:", this.tiMainMenus);
         boolean quite = false;
 
         while (!quite) {
+            MyTiService.printMenu("Options:", this.tiMainMenus);
             String userInput = Common.waitUsersChoice("What is your selection: ");
             if(userInput.equals("1")){
                 this.handleBuyJourney();
@@ -45,6 +44,8 @@ public class MyTiService {
             } else{
                 System.out.println("Sorry, that is an invalid option!");
             }
+
+            System.out.println("\n");
         }
         System.out.println("Goodbye!");
     }
@@ -52,10 +53,30 @@ public class MyTiService {
     private void initService() {
         this.tiMainMenus = new String[]{ "1.Buy a Journey for a User", "2.Recharge a MyTi card for a User", "3.Show remaining credit for a User", "4.Print User Reports", "5.Update pricing", "6.Show Station statistics", "7.Add a new User", "8.Quit"};
         this.userService = new UserService();
-        this.stations = new ArrayList();
+        this.stations = new HashMap();
         this.userTravelViewModels = new HashMap();
+        this.initStations();
     }
+
+    private void initStations(){
+        Station station = new Station("Central", ZoneType.ZONE1);
+        this.stations.put(station.getName(), station);
+
+        station = new Station("Flagstaff", ZoneType.ZONE1);
+        this.stations.put(station.getName(), station);
+
+        station = new Station("Richmond", ZoneType.ZONE1);
+        this.stations.put(station.getName(), station);
+
+        station = new Station("Lilydale", ZoneType.ZONE1_2);
+        this.stations.put(station.getName(), station);
+
+        station = new Station("Epping", ZoneType.ZONE1_2);
+        this.stations.put(station.getName(), station);
+    }
+
     private void handleBuyJourney(){
+
         String userId = Common.waitUsersChoice("Which user:");
         String startStationName = Common.waitUsersChoice("From what station:");
         String endStationName = Common.waitUsersChoice("To what station:");
@@ -85,7 +106,7 @@ public class MyTiService {
 
     private void printBalance(String userId) {
         float balance = this.userService.getUserBalance(userId);
-        String strMsg = String.format("Credit remaining for %s: %f", userId, balance);
+        String strMsg = String.format("Credit remaining for %s: %.2f", userId, balance);
         System.out.println(strMsg);
     }
 
@@ -97,9 +118,7 @@ public class MyTiService {
 
     }
 
-    private void printStationReport(){
-
-    }
+    private void printStationReport(){}
 
     private TravelViewModel getTravelVMByUserId(String userId) {
         if(this.userTravelViewModels.containsKey(userId)){
@@ -131,8 +150,7 @@ public class MyTiService {
         LocalDateTime dateTime = LocalDateTime.parse(formatTime, formatter);
         return dateTime;
     }
-
-
+    
     private static void printOutTiReceipt(TiReceipt receipt, String userId) {
         if(receipt.getNoEnoughBlance()) {
             System.out.println("You don't have enough balance.");
@@ -145,11 +163,12 @@ public class MyTiService {
             String strZone = MyTiService.getZoneTypeText(receipt.getZoneType());
             String strConcession = receipt.getConcession()? "(Concession)" : "";
 
-            String message = String.format("%s, %s %s Travel Pass purchased for %s for $2f", strPassType, strZone, strConcession, userId, receipt.getCost());
+            String message = String.format("%s, %s %s Travel Pass purchased for %s for $%.2f", strPassType, strZone, strConcession, userId, receipt.getCost());
             System.out.println(message);
 
             if(receipt.getExpireTime() != null) {
-                System.out.println("Valid until " + receipt.getExpireTime().toString());
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+                System.out.println("Valid until " + receipt.getExpireTime().format(formatter));
             }
         } else {
 

@@ -101,8 +101,12 @@ public class PriceMatrix implements IPriceMatrix {
     }
 
     private static LocalDateTime getMidnightOfDay(LocalDateTime dateTime) {
-        String date = dateTime.toLocalDate().toString();
-        LocalDateTime midnight = LocalDateTime.parse(date + " 23:59");
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String date = dateTime.toLocalDate().format(formatter);
+
+        formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        LocalDateTime midnight = LocalDateTime.parse(date + " 23:59",formatter);
         return midnight;
     }
 }
