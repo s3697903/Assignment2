@@ -2,9 +2,7 @@ package Services;
 
 import Helpers.Common;
 import Helpers.TiReceipt;
-import Models.Journey;
-import Models.Passenger;
-import Models.Station;
+import Models.*;
 import ViewModels.TravelViewModel;
 
 import java.time.LocalDateTime;
@@ -70,8 +68,8 @@ public class MyTiService {
         LocalDateTime localEndDate = MyTiService.getLocalDateTimeFromString(strDate + " " + arrivalTime);
 
         Journey journey = new Journey(localStartDate, localEndDate, null, null);
-        TiReceipt priceInfo = vm.startNewJourney(journey);
-        MyTiService.printOutPriceInfo(priceInfo);
+        TiReceipt receipt = vm.startNewJourney(journey);
+        MyTiService.printOutTiReceipt(receipt, userId);
     }
 
     private void handleAddUser() {
@@ -135,7 +133,52 @@ public class MyTiService {
     }
 
 
-    private static void printOutPriceInfo(TiReceipt priceInfo) {
+    private static void printOutTiReceipt(TiReceipt receipt, String userId) {
+        if(receipt.getNoEnoughBlance()) {
+            System.out.println("You don't have enough balance.");
+            return;
+        }
 
+        if(receipt.getNewTicket()) {
+
+            String strPassType = MyTiService.getPassTypeText(receipt.getPassType());
+            String strZone = MyTiService.getZoneTypeText(receipt.getZoneType());
+            String strConcession = receipt.getConcession()? "(Concession)" : "";
+
+            String message = String.format("%s, %s %s Travel Pass purchased for %s for $2f", strPassType, strZone, strConcession, userId, receipt.getCost());
+            System.out.println(message);
+
+            if(receipt.getExpireTime() != null) {
+                System.out.println("Valid until " + receipt.getExpireTime().toString());
+            }
+        } else {
+
+            String strPassType = MyTiService.getPassTypeText(receipt.getPassType());
+            String strZone = MyTiService.getZoneTypeText(receipt.getZoneType());
+            String message = String.format("Current %s %s Travel Pass still valid", strPassType, strZone);
+            System.out.println(message);
+        }
+    }
+
+    private static String getPassTypeText(TravelPassType passType){
+        String strPassType = "";
+        if(passType == TravelPassType.TwoHour) {
+            strPassType = "2 Hours";
+        } else if(passType == TravelPassType.AllDay) {
+            strPassType = "All day";
+        }
+
+        return strPassType;
+    }
+
+    private static String getZoneTypeText(ZoneType zoneType){
+        String strZone = "";
+        if(zoneType == ZoneType.ZONE1) {
+            strZone = "Zone 1";
+        } else if(zoneType == ZoneType.ZONE1_2) {
+            strZone = "Zone 1&2";
+        }
+
+        return strZone;
     }
 }

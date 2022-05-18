@@ -3,6 +3,8 @@ package Helpers;
 import Models.TravelPassType;
 import Models.ZoneType;
 
+import java.time.LocalDateTime;
+
 public class TiReceipt {
     private boolean newTicket;
     private float cost;
@@ -10,6 +12,7 @@ public class TiReceipt {
     private ZoneType zoneType;
     private boolean concession;
     private boolean noEnoughBalance;
+    private LocalDateTime expireTime;
 
     public boolean getNewTicket() {
         return newTicket;
@@ -56,5 +59,13 @@ public class TiReceipt {
 
     public boolean getNoEnoughBlance() {
         return this.noEnoughBalance;
+    }
+
+    public void setExpireTime(LocalDateTime expireTime){
+        this.expireTime = expireTime;
+    }
+
+    public LocalDateTime getExpireTime() {
+        return this.expireTime;
     }
 }
