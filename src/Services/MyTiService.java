@@ -3,6 +3,7 @@ package Services;
 import Helpers.Common;
 import Helpers.TiReceipt;
 import Helpers.Tuple;
+import Interfaces.IPriceMatrix;
 import Interfaces.ITravelViewModel;
 import Models.*;
 import ViewModels.TravelViewModel;
@@ -14,7 +15,7 @@ import java.util.*;
 public class MyTiService {
     private static Integer MaxCredit = 100;
     private static Integer TopUpPrecise = 5;
-
+    private IPriceMatrix priceMatrix;
     private UserService userService;
     private String[] tiMainMenus;
     private Map<String, Station> stations;
@@ -27,6 +28,14 @@ public class MyTiService {
         INPUT_DATE,
         INPUT_START_TIME,
         INPUT_END_TIME,
+    }
+
+    private enum UpdatePriceFMS {
+        INPUT_2HourZone1Price,
+        INPUT_2HourZone1_2Price,
+        INPUT_2HourDuration,
+        INPUT_AllDayZone1Price,
+        INPUT_AllDayZone1_2Price,
     }
 
     public MyTiService() {
@@ -69,6 +78,7 @@ public class MyTiService {
         this.userService = new UserService();
         this.stations = new HashMap();
         this.userTravelViewModels = new HashMap();
+        this.priceMatrix = new PriceMatrix();
         this.initStations();
     }
 
@@ -245,7 +255,85 @@ public class MyTiService {
     }
 
     private void updatePricing(){
+        boolean quite = false;
+        UpdatePriceFMS state = UpdatePriceFMS.INPUT_2HourZone1Price;
+        while (!quite){
+            if(state == UpdatePriceFMS.INPUT_2HourZone1Price){
+                String twoHourPriceForZone1 = Common.waitUsersChoice("Please input the price of 2 hours for zone1(tap enter if you don't want to change it): ");
+                if(!Common.isTextNullOrEmpty(twoHourPriceForZone1)){
+                    try{
+                        float price = Float.parseFloat(twoHourPriceForZone1);
+                        if(price <= 0.0){
+                            throw new Exception();
+                        }
+                        this.priceMatrix.set2HoursTicketPriceForZone1(price);
+                        state = UpdatePriceFMS.INPUT_2HourZone1_2Price;
+                    }catch (Exception ex){
+                        System.out.println("Sorry, this is an invalid input, please try again.");
+                    }
+                }
+            } else if(state == UpdatePriceFMS.INPUT_2HourZone1_2Price){
+                String twoHourPriceForZone1_2 = Common.waitUsersChoice("Please input the price of 2 hours for zone1&2(tap enter if you don't want to change it): ");
+                if(!Common.isTextNullOrEmpty(twoHourPriceForZone1_2)){
+                    try{
+                        float price = Float.parseFloat(twoHourPriceForZone1_2);
+                        if(price <= 0.0){
+                            throw new Exception();
+                        }
+                        this.priceMatrix.set2HoursTicketPriceForZone1_2(price);
+                        state = UpdatePriceFMS.INPUT_2HourDuration;
+                    }catch (Exception ex){
+                        System.out.println("Sorry, this is an invalid input, please try again.");
+                    }
+                }
+            } else if(state == UpdatePriceFMS.INPUT_2HourDuration) {
+                String twoHourDuration = Common.waitUsersChoice("Please input the duration of 2 hours (tap enter if you don't want to change it): ");
+                if(!Common.isTextNullOrEmpty(twoHourDuration)){
+                    try{
+                        float duration = Float.parseFloat(twoHourDuration);
+                        if(duration <= 0.0){
+                            throw new Exception();
+                        }
 
+                        this.priceMatrix.set2HoursTicketDuration(duration);
+                        state = UpdatePriceFMS.INPUT_AllDayZone1Price;
+                    }catch (Exception ex){
+                        System.out.println("Sorry, this is an invalid input, please try again.");
+                    }
+                }
+            } else if(state == UpdatePriceFMS.INPUT_AllDayZone1Price){
+                String allDayPriceForZone1 = Common.waitUsersChoice("Please input the price of all day ticket for zone1(tap enter if you don't want to change it): ");
+                if(!Common.isTextNullOrEmpty(allDayPriceForZone1)){
+                    try{
+                        float price = Float.parseFloat(allDayPriceForZone1);
+                        if(price <= 0.0){
+                            throw new Exception();
+                        }
+                        this.priceMatrix.setAllDayTickePriceForZone1(price);
+                        state = UpdatePriceFMS.INPUT_AllDayZone1_2Price;
+                    }catch (Exception ex){
+                        System.out.println("Sorry, this is an invalid input, please try again.");
+                    }
+                }
+            } else if(state == UpdatePriceFMS.INPUT_AllDayZone1_2Price){
+                String allDayPriceForZone1_2 = Common.waitUsersChoice("Please input the price of all day ticket for zone1&2(tap enter if you don't want to change it): ");
+                if(!Common.isTextNullOrEmpty(allDayPriceForZone1_2)){
+                    try{
+                        float price = Float.parseFloat(allDayPriceForZone1_2);
+                        if(price <= 0.0){
+                            throw new Exception();
+                        }
+                        this.priceMatrix.setAllDayTickePriceForZone1_2(price);
+                        quite = true;
+                    }catch (Exception ex){
+                        System.out.println("Sorry, this is an invalid input, please try again.");
+                    }
+                }
+            } else {
+                System.out.println("Sorry, invalid options");
+                state = UpdatePriceFMS.INPUT_2HourZone1Price;
+            }
+        }
     }
 
     private void printStationReport(){}
@@ -256,7 +344,7 @@ public class MyTiService {
         }
 
         Passenger passenger = this.userService.getPassengerById(userId);
-        TravelViewModel vm = new TravelViewModel(passenger, new PriceMatrix());
+        TravelViewModel vm = new TravelViewModel(passenger, this.priceMatrix);
 
         this.userTravelViewModels.put(userId, vm);
 

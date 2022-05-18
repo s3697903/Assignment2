@@ -3,10 +3,7 @@ package Services;
 import Helpers.TiReceipt;
 import Interfaces.IPriceMatrix;
 import Models.*;
-
-import java.text.DateFormat;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -15,7 +12,8 @@ public class PriceMatrix implements IPriceMatrix {
     private static float JUNIOR_DISCOUNT = 0.5F;
     private static float SENIOR_DISCOUNT = 0.5F;
     private static float SENIOR_SAT_DISCOUNT = 0.0F;
-    private static float[][] prices = new float[][]{{2.5F, 3.5F}, {4.9F, 6.8F}};
+    private float twoHoursDuration = 2.0F;
+    private float[][] prices = new float[][]{{2.5F, 3.5F}, {4.9F, 6.8F}};
 
     public TiReceipt calculatePrice(PassengerType passengerType, TravelPass travelPass, Journey journey) {
         TiReceipt receipt = new TiReceipt();
@@ -27,7 +25,7 @@ public class PriceMatrix implements IPriceMatrix {
             receipt.setNewTicket(true);
             receipt.setPassType(TravelPassType.TwoHour);
             receipt.setZoneType(ZoneType.ZONE1);
-            receipt.setExpireTime(PriceMatrix.addHoursInSameDay(journey.getStartTime(), 2));
+            receipt.setExpireTime(PriceMatrix.addHoursInSameDay(journey.getStartTime(), this.twoHoursDuration));
         } else if(travelPass.getPassType() == TravelPassType.AllDay) {
             price = 0.0F;
             receipt.setNewTicket(false);
@@ -36,10 +34,10 @@ public class PriceMatrix implements IPriceMatrix {
             Journey firstJourney = travelPass.getJourneies().get(0); // should check start time at the first journey.
 
             // check if new journey fits in 2 hours
-            if(PriceMatrix.getDifferHour(journey.getStartTime(), firstJourney.getEndDate()) < 2 ){
+            if(PriceMatrix.getDifferHour(journey.getStartTime(), firstJourney.getEndDate()) < this.twoHoursDuration ){
                 price = 0.0F;
                 receipt.setNewTicket(false);
-                receipt.setExpireTime(PriceMatrix.addHoursInSameDay(firstJourney.getStartTime(), 2));
+                receipt.setExpireTime(PriceMatrix.addHoursInSameDay(firstJourney.getStartTime(), this.twoHoursDuration));
             } else {
                 // if outside 2 hours
                 float allDayTi = prices[1][0];
@@ -51,7 +49,7 @@ public class PriceMatrix implements IPriceMatrix {
                 } else {
                     price = twoHour;
                     receipt.setPassType(TravelPassType.TwoHour);
-                    receipt.setExpireTime(PriceMatrix.addHoursInSameDay(journey.getStartTime(), 2));
+                    receipt.setExpireTime(PriceMatrix.addHoursInSameDay(journey.getStartTime(), this.twoHoursDuration));
                 }
 
                 receipt.setNewTicket(true);
@@ -63,6 +61,25 @@ public class PriceMatrix implements IPriceMatrix {
         receipt.setConcession(discountRate > 0.0F);
 
         return receipt;
+    }
+
+    public void set2HoursTicketDuration(float duration){
+        if(duration < 2.0)
+            return;
+
+        this.twoHoursDuration = duration;
+    }
+    public void set2HoursTicketPriceForZone1(float price){
+        this.prices[0][0] = price;
+    }
+    public void set2HoursTicketPriceForZone1_2(float price){
+        this.prices[0][1] = price;
+    }
+    public void setAllDayTickePriceForZone1(float price){
+        this.prices[1][0] = price;
+    }
+    public void setAllDayTickePriceForZone1_2(float price){
+        this.prices[1][1] = price;
     }
 
     private static float getDiscountRate(PassengerType passengerType, LocalDateTime travelDate) {
@@ -90,8 +107,8 @@ public class PriceMatrix implements IPriceMatrix {
         return Duration.between(endDate, startDate).toHours();
     }
 
-    private static LocalDateTime addHoursInSameDay(LocalDateTime dateTime, Integer hours) {
-        LocalDateTime dt = dateTime.plusHours(hours);
+    private static LocalDateTime addHoursInSameDay(LocalDateTime dateTime, float hours) {
+        LocalDateTime dt = dateTime.plusMinutes((int)(hours * 60));
         LocalDateTime midnight = PriceMatrix.getMidnightOfDay(dateTime);
         if(dt.compareTo(midnight) > 0) {
             return midnight;
