@@ -1,5 +1,7 @@
 package Helpers;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class Common {
@@ -14,5 +16,10 @@ public class Common {
         System.out.print(instruction == null ? "" : instruction);
         Scanner in = new Scanner(System.in);
         return in.nextLine();
+    }
+
+    public static String convertLocalDateTimeToString(LocalDateTime dateTime){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        return dateTime.format(formatter);
     }
 }

@@ -50,6 +50,16 @@ public class TravelViewModel implements ITravelViewModel {
         return receipt;
     }
 
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        this.travels.values().forEach((travelPasses) -> {
+            travelPasses.forEach((travelPass) -> {
+                sb.append(travelPass.toString());
+            });
+        });
+        return sb.toString();
+    }
+
     private TravelPass getLastTravelInDay(LocalDateTime date) {
         String strDate = this.getDayTextFromDate(date);
         List<TravelPass> travelPasses = this.travels.get(strDate);

@@ -22,4 +22,6 @@ public class Journey {
     public LocalDateTime getEndDate() {
         return this.endDate;
     }
+    public Station getDepartureStation() {return this.departureStation;}
+    public Station getArrivalStation() {return this.arrivalStation;}
 }

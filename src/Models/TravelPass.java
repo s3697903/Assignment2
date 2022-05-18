@@ -1,5 +1,7 @@
 package Models;
 
+import Helpers.Common;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,5 +45,15 @@ public class TravelPass {
 
     public List<Journey> getJourneies() {
         return this.journeies;
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        this.journeies.forEach((journey) -> {
+            sb.append(String.format("StartTime: %s EndTime: %s Departure: %s Arrival: %s", Common.convertLocalDateTimeToString(journey.getStartTime()), Common.convertLocalDateTimeToString(journey.getEndDate()), journey.getDepartureStation().getName(), journey.getArrivalStation().getName()));
+            sb.append("\n");
+        });
+
+        return sb.toString();
     }
 }

@@ -6,6 +6,7 @@ import Models.PassengerType;
 import Models.TravelPass;
 import ViewModels.TravelViewModel;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +60,14 @@ public class UserService {
 
     public float getUserBalance(String userId){
         return this.passengers.get(userId).getBalance();
+    }
+
+    public List<Passenger> getOrderedPassengers() {
+        return new ArrayList(this.passengers.values());
+    }
+
+    public boolean hasUser(String userId) {
+        return this.passengers.containsKey(userId);
     }
 
     private void initService() {

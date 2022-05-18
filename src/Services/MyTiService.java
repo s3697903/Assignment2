@@ -2,6 +2,7 @@ package Services;
 
 import Helpers.Common;
 import Helpers.TiReceipt;
+import Interfaces.ITravelViewModel;
 import Models.*;
 import ViewModels.TravelViewModel;
 
@@ -13,7 +14,16 @@ public class MyTiService {
     private UserService userService;
     private String[] tiMainMenus;
     private Map<String, Station> stations;
-    private Map<String, TravelViewModel> userTravelViewModels;
+    private Map<String, ITravelViewModel> userTravelViewModels;
+
+    private enum PurchaseFMS {
+        INPUT_USER,
+        INPUT_DEPARTURE,
+        INPUT_ARRIVAL,
+        INPUT_DATE,
+        INPUT_START_TIME,
+        INPUT_END_TIME,
+    }
 
     public MyTiService() {
         this.initService();
@@ -76,21 +86,83 @@ public class MyTiService {
     }
 
     private void handleBuyJourney(){
+        boolean quite = false;
+        PurchaseFMS state = PurchaseFMS.INPUT_USER;
+        String userId = "";
+        String startStationName = "";
+        String endStationName = "";
+        String strDate = "";
+        String departureTime = "";
+        String arrivalTime = "";
+        LocalDateTime localStartDate = null;
+        LocalDateTime localEndDate = null;
 
-        String userId = Common.waitUsersChoice("Which user:");
-        String startStationName = Common.waitUsersChoice("From what station:");
-        String endStationName = Common.waitUsersChoice("To what station:");
-        String strDate = Common.waitUsersChoice("What date:");
-        String departureTime = Common.waitUsersChoice("Departure time:");
-        String arrivalTime = Common.waitUsersChoice("Arrival time:");
+        while (!quite){
+            switch (state){
+                case INPUT_USER:
+                    userId = Common.waitUsersChoice("Which user:");
+                    if(!this.userService.hasUser(userId)){
+                        System.out.println("Cannot find the user: " + userId);
+                    } else {
+                        state = PurchaseFMS.INPUT_DEPARTURE;
+                    }
+                    break;
+                case INPUT_DEPARTURE:
+                    startStationName = Common.waitUsersChoice("From what station:");
+                    if(!this.stations.containsKey(startStationName)){
+                        System.out.println("Cannot find the station: " + startStationName);
+                    } else {
+                        state = PurchaseFMS.INPUT_ARRIVAL;
+                    }
+                    break;
+                case INPUT_ARRIVAL:
+                    endStationName = Common.waitUsersChoice("To what station:");
+                    if(!this.stations.containsKey(endStationName)){
+                        System.out.println("Cannot find the station: " + endStationName);
+                    } else {
+                        state = PurchaseFMS.INPUT_DATE;
+                    }
+                    break;
+                case INPUT_DATE:
+                    strDate = Common.waitUsersChoice("What date(dd/MM/yyyy):");
+                    state = PurchaseFMS.INPUT_START_TIME;
+                    break;
+                case INPUT_START_TIME:
+                    departureTime = Common.waitUsersChoice("Departure time(HH:mm):");
+                    state = PurchaseFMS.INPUT_END_TIME;
+                    break;
+                case INPUT_END_TIME:
+                    arrivalTime = Common.waitUsersChoice("Arrival time(HH:mm):");
 
-        TravelViewModel vm = this.getTravelVMByUserId(userId);
-        LocalDateTime localStartDate = MyTiService.getLocalDateTimeFromString(strDate + " " + departureTime);
-        LocalDateTime localEndDate = MyTiService.getLocalDateTimeFromString(strDate + " " + arrivalTime);
+                    // valid the date and time
+                    try{
+                        localStartDate = MyTiService.getLocalDateTimeFromString(strDate + " " + departureTime);
+                        localEndDate = MyTiService.getLocalDateTimeFromString(strDate + " " + arrivalTime);
+                        quite = true;
+                    } catch (Exception ex) {
+                        state = PurchaseFMS.INPUT_DATE;
+                        System.out.println("Invalid date and time. Please try again.");
+                    }
 
-        Journey journey = new Journey(localStartDate, localEndDate, null, null);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        ITravelViewModel vm = this.getTravelVMByUserId(userId);
+        Station departure = this.stations.get(startStationName);
+        Station arrival = this.stations.get(endStationName);
+        Journey journey = new Journey(localStartDate, localEndDate, departure, arrival);
         TiReceipt receipt = vm.startNewJourney(journey);
+
+        if(receipt != null){
+            departure.increaseJourneyCount();
+            arrival.increaseJourneyCount();
+        }
+
         MyTiService.printOutTiReceipt(receipt, userId);
+        this.printUserBalance(userId);
     }
 
     private void handleAddUser() {
@@ -101,17 +173,30 @@ public class MyTiService {
     }
 
     private void handleDisplayingBalance(){
-
+        String userId = Common.waitUsersChoice("Which user:");
+        this.printUserBalance(userId);
     }
 
-    private void printBalance(String userId) {
-        float balance = this.userService.getUserBalance(userId);
-        String strMsg = String.format("Credit remaining for %s: %.2f", userId, balance);
-        System.out.println(strMsg);
+    private void printUserBalance(String userId){
+        Passenger passenger = this.userService.getPassengerById(userId);
+        if(passenger == null) {
+            System.out.println("Can not find the user: " + userId);
+        } else {
+            System.out.println(String.format("User %s balance is $%.2f", userId, passenger.getBalance()));
+        }
     }
 
     private void printUserReport(){
-
+        List<Passenger> passengers = this.userService.getOrderedPassengers();
+        passengers.forEach((user) -> {
+            ITravelViewModel vm = this.userTravelViewModels.get(user.getUserId());
+            System.out.println(String.format("Travel pass for user: %s %s", user.getUserId(), user.getFullName()));
+            if(vm == null){
+                System.out.println("N/A");
+            } else {
+                System.out.println(String.format("  %s",vm.toString()));1
+            }
+        });
     }
 
     private void updatePricing(){
@@ -120,7 +205,7 @@ public class MyTiService {
 
     private void printStationReport(){}
 
-    private TravelViewModel getTravelVMByUserId(String userId) {
+    private ITravelViewModel getTravelVMByUserId(String userId) {
         if(this.userTravelViewModels.containsKey(userId)){
             return this.userTravelViewModels.get(userId);
         }
@@ -150,7 +235,7 @@ public class MyTiService {
         LocalDateTime dateTime = LocalDateTime.parse(formatTime, formatter);
         return dateTime;
     }
-    
+
     private static void printOutTiReceipt(TiReceipt receipt, String userId) {
         if(receipt.getNoEnoughBlance()) {
             System.out.println("You don't have enough balance.");
@@ -163,12 +248,11 @@ public class MyTiService {
             String strZone = MyTiService.getZoneTypeText(receipt.getZoneType());
             String strConcession = receipt.getConcession()? "(Concession)" : "";
 
-            String message = String.format("%s, %s %s Travel Pass purchased for %s for $%.2f", strPassType, strZone, strConcession, userId, receipt.getCost());
+            String message = String.format("%s %s %s Travel Pass purchased for %s for $%.2f", strPassType, strZone, strConcession, userId, receipt.getCost());
             System.out.println(message);
 
             if(receipt.getExpireTime() != null) {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-                System.out.println("Valid until " + receipt.getExpireTime().format(formatter));
+                System.out.println("Valid until " + Common.convertLocalDateTimeToString(receipt.getExpireTime()));
             }
         } else {
 
