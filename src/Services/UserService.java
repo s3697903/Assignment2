@@ -22,8 +22,8 @@ public class UserService {
     public void requestAddNewUser() {
         boolean quite = false;
         while (!quite){
-            System.out.println("Please input the new user information:\n");
-            String userInput = Common.waitUsersChoice("Please follow this format: [userId] [first name] [last name] [email] [Senior|Junior|Adult]");
+            System.out.println("Please input the new user information\n");
+            String userInput = Common.waitUsersChoice("Please follow this format: [userId] [first name] [last name] [email] [Senior|Junior|Adult]:");
             String[] components = userInput.split("\\s+");
             if(components.length != 5) {
                 System.out.println("Invalid input");
