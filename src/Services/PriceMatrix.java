@@ -3,6 +3,8 @@ package Services;
 import Helpers.TiReceipt;
 import Interfaces.IPriceMatrix;
 import Models.*;
+
+import javax.print.attribute.standard.PresentationDirection;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -28,6 +30,8 @@ public class PriceMatrix implements IPriceMatrix {
             receipt.setExpireTime(PriceMatrix.addHoursInSameDay(journey.getStartTime(), this.twoHoursDuration));
         } else if(travelPass.getPassType() == TravelPassType.AllDay) {
             price = 0.0F;
+            receipt.setPassType(TravelPassType.AllDay);
+            receipt.setZoneType(ZoneType.ZONE1);
             receipt.setNewTicket(false);
             receipt.setExpireTime(PriceMatrix.getMidnightOfDay(travelPass.getJourneies().get(0).getStartTime()));
         } else{
@@ -36,6 +40,8 @@ public class PriceMatrix implements IPriceMatrix {
             // check if new journey fits in 2 hours
             if(PriceMatrix.getDifferHour(journey.getStartTime(), firstJourney.getEndDate()) < this.twoHoursDuration ){
                 price = 0.0F;
+                receipt.setPassType(TravelPassType.TwoHour);
+                receipt.setZoneType(ZoneType.ZONE1);
                 receipt.setNewTicket(false);
                 receipt.setExpireTime(PriceMatrix.addHoursInSameDay(firstJourney.getStartTime(), this.twoHoursDuration));
             } else {
