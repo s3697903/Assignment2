@@ -249,7 +249,7 @@ public class MyTiService {
             if(vm == null){
                 System.out.println("N/A");
             } else {
-                System.out.println(String.format("  %s",vm.toString()));
+                System.out.println(vm.toString());
             }
         });
     }

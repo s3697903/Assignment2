@@ -41,7 +41,14 @@ public class TravelViewModel implements ITravelViewModel {
             travelPass.setZoneType(receipt.getZoneType());
 
             String key = this.getDayTextFromDate(journey.getStartTime());
-            List<TravelPass> travelPasses = new ArrayList<>();
+            List<TravelPass> travelPasses = null;
+
+            if(this.travels.containsKey(key)){
+                travelPasses = this.travels.get(key);
+            } else{
+                travelPasses = new ArrayList();
+            }
+
             travelPasses.add(travelPass);
             this.travels.put(key, travelPasses);
         }
