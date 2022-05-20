@@ -171,8 +171,8 @@ public class MyTiService {
         TiReceipt receipt = vm.startNewJourney(journey);
 
         if(receipt != null){
-            departure.increaseJourneyCount();
-            arrival.increaseJourneyCount();
+            departure.increaseDepartureCount();
+            arrival.increaseArrivalCount();
         }
 
         MyTiService.printOutTiReceipt(receipt, userId);
@@ -336,7 +336,15 @@ public class MyTiService {
         }
     }
 
-    private void printStationReport(){}
+    private void printStationReport(){
+        StringBuilder sb = new StringBuilder();
+        this.stations.values().forEach((station) -> {
+            sb.append(station.toString());
+            sb.append("\n");
+        });
+
+        System.out.println(sb.toString());
+    }
 
     private ITravelViewModel getTravelVMByUserId(String userId) {
         if(this.userTravelViewModels.containsKey(userId)){
