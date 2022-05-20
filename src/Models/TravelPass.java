@@ -5,10 +5,16 @@ import Helpers.Common;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * the travle pass model
+ */
 public class TravelPass {
+
     private float ticketCost = 0.0F;
     private TravelPassType passType;
     private ZoneType zoneType;
+
+    // the journeys in this travel pass, as multiple journeys might share one travel pass.
     private List<Journey> journeies;
 
     public TravelPass() {

@@ -1,5 +1,8 @@
 package Models;
 
+/**
+ * the passenger model
+ */
 public class Passenger {
     private String userId;
     private float balance = 0.0F;

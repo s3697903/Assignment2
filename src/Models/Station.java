@@ -1,7 +1,8 @@
 package Models;
 
-import java.util.Date;
-
+/**
+ * the station model
+ */
 public class Station {
     private int stationId;
     private String name;

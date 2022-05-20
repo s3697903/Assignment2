@@ -21,11 +21,21 @@ public class Common {
         return in.nextLine();
     }
 
+    /**
+     * convert localdatetime to string
+     * @param dateTime a local datetime object
+     * @return a datetime string
+     */
     public static String convertLocalDateTimeToString(LocalDateTime dateTime){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         return dateTime.format(formatter);
     }
 
+    /**
+     * check if the string is null or empty
+     * @param strValue a string which need to check
+     * @return if the string is null or empty
+     */
     public static boolean isTextNullOrEmpty(String strValue){
         return strValue == null || strValue.isEmpty();
     }

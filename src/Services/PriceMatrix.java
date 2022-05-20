@@ -17,6 +17,13 @@ public class PriceMatrix implements IPriceMatrix {
     private float twoHoursDuration = 2.0F;
     private float[][] prices = new float[][]{{2.5F, 3.5F}, {4.9F, 6.8F}};
 
+    /**
+     * Calcuate price based on input parameters.
+     * @param passengerType the passenger type
+     * @param travelPass the travel pass object
+     * @param journey the new journey
+     * @return the ticket receipt object.
+     */
     public TiReceipt calculatePrice(PassengerType passengerType, TravelPass travelPass, Journey journey) {
         TiReceipt receipt = new TiReceipt();
         float price = 0.0F;
@@ -88,6 +95,12 @@ public class PriceMatrix implements IPriceMatrix {
         this.prices[1][1] = price;
     }
 
+    /**
+     * ger discount rate by passenger type and travel time.
+     * @param passengerType the passenger type
+     * @param travelDate the travel time.
+     * @return the discount rate.
+     */
     private static float getDiscountRate(PassengerType passengerType, LocalDateTime travelDate) {
         float discountRate = 1.0F;
         switch (passengerType) {
@@ -109,10 +122,22 @@ public class PriceMatrix implements IPriceMatrix {
         return discountRate;
     }
 
+    /**
+     * calcuate the difference between two date time.
+     * @param startDate the first date time
+     * @param endDate the second date time
+     * @return the diffenence by hour
+     */
     private static long getDifferHour(LocalDateTime startDate, LocalDateTime endDate) {
         return Duration.between(endDate, startDate).toHours();
     }
 
+    /**
+     * add hours in a date time.
+     * @param dateTime the date time
+     * @param hours the hours need to add
+     * @return the datetime which added hours. the max value is midnight.
+     */
     private static LocalDateTime addHoursInSameDay(LocalDateTime dateTime, float hours) {
         LocalDateTime dt = dateTime.plusMinutes((int)(hours * 60));
         LocalDateTime midnight = PriceMatrix.getMidnightOfDay(dateTime);
@@ -123,6 +148,11 @@ public class PriceMatrix implements IPriceMatrix {
         return dt;
     }
 
+    /**
+     * get midnighte datetime
+     * @param dateTime the date time.
+     * @return the midnight.
+     */
     private static LocalDateTime getMidnightOfDay(LocalDateTime dateTime) {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");

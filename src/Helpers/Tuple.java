@@ -1,5 +1,10 @@
 package Helpers;
 
+/**
+ * two value tuple
+ * @param <T1> the first value
+ * @param <T2> the second value
+ */
 public class Tuple<T1, T2> {
 
     private T1 t1;

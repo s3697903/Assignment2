@@ -1,8 +1,10 @@
 package Models;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
+/**
+ * the journey model
+ */
 public class Journey {
     private LocalDateTime startTime;
     private LocalDateTime endDate;

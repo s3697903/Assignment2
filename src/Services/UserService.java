@@ -3,7 +3,6 @@ package Services;
 import Helpers.Common;
 import Models.Passenger;
 import Models.PassengerType;
-import Models.TravelPass;
 import ViewModels.TravelViewModel;
 
 import java.util.ArrayList;
@@ -11,7 +10,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * user service
+ */
 public class UserService {
+
     private Map<String, Passenger> passengers;
     private Map<Passenger, TravelViewModel> passengerTravel;
 
@@ -19,6 +22,9 @@ public class UserService {
         this.initService();
     }
 
+    /**
+     * add new user
+     */
     public void requestAddNewUser() {
         boolean quite = false;
         while (!quite){
@@ -56,10 +62,6 @@ public class UserService {
 
     public Passenger getPassengerById(String userId) {
         return this.passengers.get(userId);
-    }
-
-    public float getUserBalance(String userId){
-        return this.passengers.get(userId).getBalance();
     }
 
     public List<Passenger> getOrderedPassengers() {

@@ -5,13 +5,23 @@ import Models.ZoneType;
 
 import java.time.LocalDateTime;
 
+/**
+ * Ticket receipt class
+ */
 public class TiReceipt {
+
+    // if this is a new ticket.
+    // true: a new ticket purchased.
+    // false: it's not a new ticket and it's reused others
     private boolean newTicket;
+
     private float cost;
     private TravelPassType passType;
     private ZoneType zoneType;
     private boolean concession;
     private boolean noEnoughBalance;
+
+    // ticket expired datetime.
     private LocalDateTime expireTime;
 
     public boolean getNewTicket() {

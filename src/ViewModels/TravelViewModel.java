@@ -10,6 +10,9 @@ import Models.TravelPass;
 import java.time.LocalDateTime;
 import java.util.*;
 
+/**
+ * the travle view model
+ */
 public class TravelViewModel implements ITravelViewModel {
     private Passenger passenger;
     private Map<String, List<TravelPass>> travels;
