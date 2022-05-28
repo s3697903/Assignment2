@@ -1,4 +1,4 @@
-package Helpers;
+package main.java.helpers;
 
 /**
  * two value tuple

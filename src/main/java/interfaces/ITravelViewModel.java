@@ -1,7 +1,7 @@
-package Interfaces;
+package main.java.interfaces;
 
-import Helpers.TiReceipt;
-import Models.Journey;
+import main.java.helpers.TiReceipt;
+import main.java.models.Journey;
 
 /**
  * The travel view model interface

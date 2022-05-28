@@ -1,11 +1,8 @@
-package ViewModels;
+package main.java.viewmodels;
 
-import Helpers.TiReceipt;
-import Interfaces.IPriceMatrix;
-import Interfaces.ITravelViewModel;
-import Models.Journey;
-import Models.Passenger;
-import Models.TravelPass;
+import main.java.helpers.*;
+import main.java.models.*;
+import main.java.interfaces.*;
 
 import java.time.LocalDateTime;
 import java.util.*;

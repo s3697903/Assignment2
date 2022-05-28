@@ -1,4 +1,4 @@
-package Models;
+package main.java.models;
 
 /**
  * the station model
@@ -10,7 +10,8 @@ public class Station {
     private int departureCount = 0;
     private int arrivalCount = 0;
 
-    public Station(String stationName, ZoneType zoneType) {
+    public Station(int stationId, String stationName, ZoneType zoneType) {
+        this.stationId = stationId;
         this.name = stationName;
         this.zoneType = zoneType;
     }
@@ -18,6 +19,10 @@ public class Station {
     public String toString() {
         String strText = String.format("Station %s in %s has %d journeys started and %d journeys finished.", this.name, this.zoneType, this.departureCount,this.arrivalCount);
         return strText;
+    }
+
+    public int getStationId() {
+        return this.stationId;
     }
 
     public String getName(){

@@ -1,4 +1,4 @@
-package Models;
+package main.java.models;
 
 /**
  * travel pass type

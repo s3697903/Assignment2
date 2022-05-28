@@ -1,10 +1,11 @@
-package Tests;
+package main.java.tests;
 
-import Helpers.TiReceipt;
-import Interfaces.IPriceMatrix;
-import Models.*;
-import Services.PriceMatrix;
-import ViewModels.TravelViewModel;
+import main.java.helpers.TiReceipt;
+import main.java.interfaces.IPriceMatrix;
+import main.java.models.*;
+import main.java.services.PriceMatrix;
+import main.java.viewmodels.TravelViewModel;
+
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -21,8 +22,8 @@ class TravelViewModelTest {
         Passenger passenger = this.getMockupPassenger();
         IPriceMatrix priceMatrix = this.getMockupPriceMatrix();
         TravelViewModel vm = new TravelViewModel(passenger, priceMatrix);
-        Station departure = new Station("Central", ZoneType.ZONE1);
-        Station arrival = new Station("Flagstaff", ZoneType.ZONE1);
+        Station departure = new Station(1,"Central", ZoneType.ZONE1);
+        Station arrival = new Station(2,"Flagstaff", ZoneType.ZONE1);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         LocalDateTime startTime = LocalDateTime.parse("19/05/2022 15:00", formatter);
         LocalDateTime endTime = LocalDateTime.parse("19/05/2022 15:05", formatter);
@@ -59,8 +60,8 @@ class TravelViewModelTest {
         Passenger passenger = this.getMockupPassenger();
         IPriceMatrix priceMatrix = this.getMockupPriceMatrix();
         TravelViewModel vm = new TravelViewModel(passenger, priceMatrix);
-        Station departure = new Station("Central", ZoneType.ZONE1);
-        Station arrival = new Station("Flagstaff", ZoneType.ZONE1);
+        Station departure = new Station(1, "Central", ZoneType.ZONE1);
+        Station arrival = new Station(2, "Flagstaff", ZoneType.ZONE1);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         LocalDateTime startTime = LocalDateTime.parse("19/05/2022 15:00", formatter);
         LocalDateTime endTime = LocalDateTime.parse("19/05/2022 15:05", formatter);
@@ -96,8 +97,7 @@ class TravelViewModelTest {
     }
 
     private Passenger getMockupPassenger(){
-        Passenger passenger = new Passenger("lc", "Lawrence", "Cavedon", "lawrence.cavedon@rmit.edu.au", PassengerType.SENIOR);
-        passenger.setBalance(20.0F);
+        Passenger passenger = new Passenger("lc", "Lawrence", "Cavedon", "lawrence.cavedon@rmit.edu.au", PassengerType.SENIOR, 20.0F);
         return passenger;
     }
 

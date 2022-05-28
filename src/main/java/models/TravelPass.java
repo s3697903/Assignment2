@@ -1,6 +1,6 @@
-package Models;
+package main.java.models;
 
-import Helpers.Common;
+import main.java.helpers.Common;
 
 import java.util.ArrayList;
 import java.util.List;

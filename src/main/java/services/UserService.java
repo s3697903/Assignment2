@@ -1,9 +1,9 @@
-package Services;
+package main.java.services;
 
-import Helpers.Common;
-import Models.Passenger;
-import Models.PassengerType;
-import ViewModels.TravelViewModel;
+import main.java.helpers.Common;
+import main.java.models.Passenger;
+import main.java.models.PassengerType;
+import main.java.viewmodels.TravelViewModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,7 +54,7 @@ public class UserService {
                 continue;
             }
 
-            Passenger passenger = new Passenger(components[0], components[1], components[2], components[3], passType);
+            Passenger passenger = new Passenger(components[0], components[1], components[2], components[3], passType, 0.0F);
             this.passengers.put(passenger.getUserId(), passenger);
             quite = true;
         }
@@ -77,11 +77,10 @@ public class UserService {
         this.passengers = new HashMap();
         this.passengerTravel = new HashMap();
 
-        Passenger passenger = new Passenger("lc", "Lawrence", "Cavedon", "lawrence.cavedon@rmit.edu.au", PassengerType.SENIOR);
-//        passenger.setBalance(20.0F);
+        Passenger passenger = new Passenger("lc", "Lawrence", "Cavedon", "lawrence.cavedon@rmit.edu.au", PassengerType.SENIOR, 0.0F);
         this.passengers.put(passenger.getUserId(), passenger);
 
-        passenger = new Passenger("vm", "Xiang", "Li", "vuhuy.mai@rmit.edu.au", PassengerType.ADULT);
+        passenger = new Passenger("vm", "Xiang", "Li", "vuhuy.mai@rmit.edu.au", PassengerType.ADULT, 0.0F);
         this.passengers.put(passenger.getUserId(), passenger);
     }
 }

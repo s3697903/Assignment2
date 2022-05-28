@@ -1,12 +1,9 @@
-package Services;
+package main.java.services;
 
-import Helpers.Common;
-import Helpers.TiReceipt;
-import Helpers.Tuple;
-import Interfaces.IPriceMatrix;
-import Interfaces.ITravelViewModel;
-import Models.*;
-import ViewModels.TravelViewModel;
+import main.java.helpers.*;
+import main.java.interfaces.*;
+import main.java.models.*;
+import main.java.viewmodels.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -83,19 +80,19 @@ public class MyTiService {
     }
 
     private void initStations(){
-        Station station = new Station("Central", ZoneType.ZONE1);
+        Station station = new Station(1, "Central", ZoneType.ZONE1);
         this.stations.put(station.getName(), station);
 
-        station = new Station("Flagstaff", ZoneType.ZONE1);
+        station = new Station(2, "Flagstaff", ZoneType.ZONE1);
         this.stations.put(station.getName(), station);
 
-        station = new Station("Richmond", ZoneType.ZONE1);
+        station = new Station(3, "Richmond", ZoneType.ZONE1);
         this.stations.put(station.getName(), station);
 
-        station = new Station("Lilydale", ZoneType.ZONE1_2);
+        station = new Station(4, "Lilydale", ZoneType.ZONE1_2);
         this.stations.put(station.getName(), station);
 
-        station = new Station("Epping", ZoneType.ZONE1_2);
+        station = new Station(5, "Epping", ZoneType.ZONE1_2);
         this.stations.put(station.getName(), station);
     }
 

@@ -1,8 +1,6 @@
-package Helpers;
+package main.java.helpers;
 
-import Models.TravelPassType;
-import Models.ZoneType;
-
+import main.java.models.*;
 import java.time.LocalDateTime;
 
 /**

@@ -1,7 +1,7 @@
-package Interfaces;
+package main.java.interfaces;
 
-import Helpers.TiReceipt;
-import Models.*;
+import main.java.models.*;
+import main.java.helpers.*;
 
 /**
  * The price matrix interface

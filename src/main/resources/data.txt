@@ -1,0 +1,9 @@
+#users   (last field is initial credit)
+lc:senior:Lawrence Cavedon:lawrence.cavedon@rmit.edu.au:50
+xl:adult:Vu Mai:vuhuy.mai@rmit.edu.au:45
+#prices
+2Hour:Zone1:2.50
+2Hour:Zone12:3.50
+AllDay:Zone1:4.90
+AllDay:Zone12:6.80
+

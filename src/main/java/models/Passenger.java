@@ -1,4 +1,4 @@
-package Models;
+package main.java.models;
 
 /**
  * the passenger model
@@ -12,12 +12,13 @@ public class Passenger {
     private String lastName;
     private String fullName;
 
-    public Passenger(String userId, String firstName, String lastName, String email, PassengerType passengerType){
+    public Passenger(String userId, String firstName, String lastName, String email, PassengerType passengerType, float balance){
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.userType = passengerType;
+        this.balance = balance;
     }
 
     public float getBalance() {

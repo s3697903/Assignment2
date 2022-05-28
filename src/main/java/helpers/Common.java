@@ -1,4 +1,6 @@
-package Helpers;
+package main.java.helpers;
+
+import main.java.models.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -19,6 +21,25 @@ public class Common {
         System.out.print(instruction == null ? "" : instruction);
         Scanner in = new Scanner(System.in);
         return in.nextLine();
+    }
+
+    /**
+     * convert string to locatedatetime.
+     * @param formatTime the formated datetime string.
+     * @return the localdatetime
+     */
+    public static LocalDateTime getLocalDateTimeFromString(String formatTime) {
+        LocalDateTime dateTime = null;
+
+        try{
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+            dateTime = LocalDateTime.parse(formatTime, formatter);
+        } catch (Exception ex){
+            dateTime = null;
+            System.out.print(ex.toString());
+        }
+
+        return dateTime;
     }
 
     /**
@@ -63,6 +84,71 @@ public class Common {
         }
 
         return new Tuple<Boolean, Integer>(success, value);
+    }
+
+
+    public static String printOutTiReceipt(TiReceipt receipt, String userId) {
+        if(receipt.getNoEnoughBlance()) {
+            return "You don't have enough balance.";
+        }
+
+        if(receipt.getNewTicket()) {
+
+            String strPassType = Common.getPassTypeText(receipt.getPassType());
+            String strZone = Common.getZoneTypeText(receipt.getZoneType());
+            String strConcession = receipt.getConcession()? "(Concession)" : "";
+
+            String message = String.format("%s %s %s Travel Pass purchased for %s for $%.2f", strPassType, strZone, strConcession, userId, receipt.getCost());
+            if(receipt.getExpireTime() != null) {
+                message = message + "\n" + "Valid until " + Common.convertLocalDateTimeToString(receipt.getExpireTime());
+            }
+
+            return message;
+        } else {
+
+            String strPassType = Common.getPassTypeText(receipt.getPassType());
+            String strZone = Common.getZoneTypeText(receipt.getZoneType());
+            String message = String.format("Current %s %s Travel Pass still valid", strPassType, strZone);
+            return message;
+        }
+    }
+
+    public static PassengerType getPassengerTypeFromText(String strPassengerType) {
+
+        PassengerType passType = PassengerType.ADULT;
+        if(strPassengerType.equals("Senior")){
+            passType = PassengerType.SENIOR;
+        } else if(strPassengerType.equals("Junior")) {
+            passType = PassengerType.JUNIOR;
+        } else if(strPassengerType.equals("Adult")) {
+            passType = PassengerType.ADULT;
+        } else {
+            throw new IllegalArgumentException("Invalid passenger type: " + strPassengerType);
+        }
+
+        return passType;
+    }
+
+    private static String getPassTypeText(TravelPassType passType){
+        String strPassType = "";
+        if(passType == TravelPassType.TwoHour) {
+            strPassType = "2 Hours";
+        } else if(passType == TravelPassType.AllDay) {
+            strPassType = "All day";
+        }
+
+        return strPassType;
+    }
+
+    private static String getZoneTypeText(ZoneType zoneType){
+        String strZone = "";
+        if(zoneType == ZoneType.ZONE1) {
+            strZone = "Zone 1";
+        } else if(zoneType == ZoneType.ZONE1_2) {
+            strZone = "Zone 1&2";
+        }
+
+        return strZone;
     }
 
     /**

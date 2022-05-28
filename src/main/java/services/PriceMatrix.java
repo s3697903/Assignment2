@@ -1,8 +1,8 @@
-package Services;
+package main.java.services;
 
-import Helpers.TiReceipt;
-import Interfaces.IPriceMatrix;
-import Models.*;
+import main.java.helpers.TiReceipt;
+import main.java.interfaces.IPriceMatrix;
+import main.java.models.*;
 
 import javax.print.attribute.standard.PresentationDirection;
 import java.time.Duration;

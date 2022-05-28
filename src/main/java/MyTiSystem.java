@@ -1,4 +1,6 @@
-import Services.MyTiService;
+package main.java;
+
+import main.java.services.MyTiService;
 
 public class MyTiSystem {
 
