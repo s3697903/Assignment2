@@ -100,7 +100,7 @@ public class UserController implements Initializable{
             return new Tuple(false, "Please input first name");
         }
 
-        this.lastName = this.tbFirstName.getText();
+        this.lastName = this.tfLastName.getText();
         if(Common.isTextNullOrEmpty(this.lastName)){
             return new Tuple(false, "Please input last name");
         }

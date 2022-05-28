@@ -306,7 +306,7 @@ public class MyTiService {
                         if(price <= 0.0){
                             throw new Exception();
                         }
-                        this.priceMatrix.setAllDayTickePriceForZone1(price);
+                        this.priceMatrix.setAllDayTicketPriceForZone1(price);
                         state = UpdatePriceFMS.INPUT_AllDayZone1_2Price;
                     }catch (Exception ex){
                         System.out.println("Sorry, this is an invalid input, please try again.");
@@ -320,7 +320,7 @@ public class MyTiService {
                         if(price <= 0.0){
                             throw new Exception();
                         }
-                        this.priceMatrix.setAllDayTickePriceForZone1_2(price);
+                        this.priceMatrix.setAllDayTicketPriceForZone1_2(price);
                         quite = true;
                     }catch (Exception ex){
                         System.out.println("Sorry, this is an invalid input, please try again.");

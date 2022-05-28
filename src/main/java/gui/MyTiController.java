@@ -1,8 +1,5 @@
 package main.java.gui;
 
-
-import main.java.helpers.*;
-import main.java.interfaces.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,9 +11,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import main.java.models.*;
 import main.java.services.PriceMatrix;
+import main.java.models.*;
 import main.java.viewmodels.*;
+import main.java.helpers.*;
+import main.java.interfaces.*;
 
 import java.io.IOException;
 import java.net.URL;
@@ -79,8 +78,8 @@ public class MyTiController implements Initializable, IDataSourceListener {
             // price
             this.priceMatrix.set2HoursTicketPriceForZone1(fileAccessor.prices[0][0]);
             this.priceMatrix.set2HoursTicketPriceForZone1_2(fileAccessor.prices[0][1]);
-            this.priceMatrix.setAllDayTickePriceForZone1(fileAccessor.prices[1][0]);
-            this.priceMatrix.setAllDayTickePriceForZone1_2(fileAccessor.prices[1][1]);
+            this.priceMatrix.setAllDayTicketPriceForZone1(fileAccessor.prices[1][0]);
+            this.priceMatrix.setAllDayTicketPriceForZone1_2(fileAccessor.prices[1][1]);
 
             this.userViewModel.setDataSourceListener(this);
         }
@@ -125,7 +124,32 @@ public class MyTiController implements Initializable, IDataSourceListener {
 
     @FXML
     protected void save(ActionEvent actionEvent) {
-        return;
+        List<Passenger> users = this.userViewModel.getOrderedPassengers();
+        StringBuilder sb = new StringBuilder();
+        sb.append(FileAccessor.SECTION_STARTER + FileAccessor.USER_SECTION_START + "\n");
+        users.forEach(item -> {
+            sb.append(item.getUserId());
+            sb.append(FileAccessor.DELIMITER);
+            sb.append(Common.convertPassengerTypeToLowerText(item.getUserType()));
+            sb.append(FileAccessor.DELIMITER);
+            sb.append(item.getFullName());
+            sb.append(FileAccessor.DELIMITER);
+            sb.append(item.getEmail());
+            sb.append(FileAccessor.DELIMITER);
+            sb.append(item.getBalance());
+            sb.append("\n");
+        });
+        sb.append(FileAccessor.SECTION_STARTER + FileAccessor.PRICES_SECTION_START + "\n");
+        sb.append(String.format("2Hour:Zone1:%.2f\n", this.priceMatrix.get2HoursTicketPriceForZone1()));
+        sb.append(String.format("2Hour:Zone12:%.2f\n", this.priceMatrix.get2HoursTicketPriceForZone1_2()));
+        sb.append(String.format("AllDay:Zone1:%.2f\n", this.priceMatrix.getAllDayTicketPriceForZone1()));
+        sb.append(String.format("AllDay:Zone12:%.2f\n", this.priceMatrix.getAllDayTicketPriceForZone1_2()));
+        boolean success = new FileAccessor().writeFile(sb.toString());
+
+        Alert alert = new Alert(success ? Alert.AlertType.CONFIRMATION : Alert.AlertType.ERROR);
+        alert.setTitle(success? "Successfully" : "Failed");
+        alert.setContentText(success? "Successfully saved into file" : "Failed to save file.");
+        alert.show();
     }
 
     @FXML

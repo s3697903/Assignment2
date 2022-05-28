@@ -85,14 +85,37 @@ public class PriceMatrix implements IPriceMatrix {
     public void set2HoursTicketPriceForZone1(float price){
         this.prices[0][0] = price;
     }
+
+    @Override
+    public float get2HoursTicketPriceForZone1() {
+        return this.prices[0][0];
+    }
+
     public void set2HoursTicketPriceForZone1_2(float price){
         this.prices[0][1] = price;
     }
-    public void setAllDayTickePriceForZone1(float price){
+
+    @Override
+    public float get2HoursTicketPriceForZone1_2() {
+        return this.prices[0][1];
+    }
+
+    public void setAllDayTicketPriceForZone1(float price){
         this.prices[1][0] = price;
     }
-    public void setAllDayTickePriceForZone1_2(float price){
+
+    @Override
+    public float getAllDayTicketPriceForZone1() {
+        return this.prices[1][0];
+    }
+
+    public void setAllDayTicketPriceForZone1_2(float price){
         this.prices[1][1] = price;
+    }
+
+    @Override
+    public float getAllDayTicketPriceForZone1_2() {
+        return this.prices[1][1];
     }
 
     /**

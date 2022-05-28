@@ -7,15 +7,16 @@ import main.java.models.TravelPassType;
 import main.java.models.ZoneType;
 
 import java.io.*;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FileAccessor {
 
-    private static String SECTION_STARTER = "#";
-    private static String USER_SECTION_START = "users";
-    private static String PRICES_SECTION_START = "prices";
-    private static String DELIMITER = ":";
+    public static String SECTION_STARTER = "#";
+    public static String USER_SECTION_START = "users";
+    public static String PRICES_SECTION_START = "prices";
+    public static String DELIMITER = ":";
 
     public List<Passenger> passengerList = new ArrayList();
 
@@ -27,12 +28,26 @@ public class FileAccessor {
         unknownSection,
     }
 
-    private String dataFileName = "data.txt";
+    private String dataFileName = "data/data.txt";
+    public boolean writeFile(String content) {
+        boolean success = false;
 
+        try{
+            FileWriter fw = new FileWriter(this.getFilePath());
+            fw.write(content);
+            fw.close();
+            success = true;
+        }catch (Exception ex){
+            success = false;
+            System.out.println(ex.toString());
+        }
+
+        return success;
+    }
     public boolean readFile() {
         try{
-            InputStreamReader is = new InputStreamReader(getClass().getClassLoader().getResourceAsStream(dataFileName));
-            BufferedReader br = new BufferedReader(is);
+            FileReader fr = new FileReader(this.getFilePath());
+            BufferedReader br = new BufferedReader(fr);
 
             boolean sectionDetected = false;
             SectionType sectionType = SectionType.unknownSection;
@@ -79,6 +94,11 @@ public class FileAccessor {
         }
 
         return true;
+    }
+
+    private String getFilePath() {
+        String path = Paths.get("").toAbsolutePath().toString();
+        return path + "/" + dataFileName;
     }
 
     private Passenger parseUserContent(String content) {

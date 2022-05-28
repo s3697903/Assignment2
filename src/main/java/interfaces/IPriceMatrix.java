@@ -9,10 +9,18 @@ import main.java.helpers.*;
 public interface IPriceMatrix {
 
     void set2HoursTicketDuration(float duration);
+
     void set2HoursTicketPriceForZone1(float price);
+    float get2HoursTicketPriceForZone1();
+
     void set2HoursTicketPriceForZone1_2(float price);
-    void setAllDayTickePriceForZone1(float price);
-    void setAllDayTickePriceForZone1_2(float price);
+    float get2HoursTicketPriceForZone1_2();
+
+    void setAllDayTicketPriceForZone1(float price);
+    float getAllDayTicketPriceForZone1();
+
+    void setAllDayTicketPriceForZone1_2(float price);
+    float getAllDayTicketPriceForZone1_2();
 
     /**
      * Calcuate price based on input parameters.

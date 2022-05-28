@@ -129,6 +129,18 @@ public class Common {
         return passType;
     }
 
+    public static String convertPassengerTypeToLowerText(PassengerType passengerType){
+        switch (passengerType){
+            case SENIOR:
+                return "senior";
+            case ADULT:
+                return "adult";
+            case JUNIOR:
+                return "junior";
+        }
+
+        return EMPTY_STR;
+    }
     private static String getPassTypeText(TravelPassType passType){
         String strPassType = "";
         if(passType == TravelPassType.TwoHour) {

@@ -37,4 +37,8 @@ public class Passenger {
     public String getFullName() {
         return this.firstName + " " + this.lastName;
     }
+
+    public String getEmail() {
+        return this.email;
+    }
 }

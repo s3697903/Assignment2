@@ -1,0 +1,8 @@
+#users
+xl:adult:Vu Mai:vuhuy.mai@rmit.edu.au:45.0
+lc:senior:Lawrence Cavedon:lawrence.cavedon@rmit.edu.au:48.75
+#prices
+2Hour:Zone1:2.50
+2Hour:Zone12:3.50
+AllDay:Zone1:4.90
+AllDay:Zone12:6.80
