@@ -13,7 +13,7 @@
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="main.java.gui.MyTiController">
     <children>
-        <AnchorPane minHeight="425.0" minWidth="714.0" prefHeight="425.0" prefWidth="714.0" VBox.vgrow="ALWAYS">
+        <AnchorPane fx:id="rootAnchorPane" minHeight="425.0" minWidth="714.0" prefHeight="425.0" prefWidth="714.0" VBox.vgrow="ALWAYS">
             <children>
                 <ListView fx:id="lstUser" layoutX="24.0" layoutY="46.0" prefHeight="200.0" prefWidth="142.0" />
                 <Label layoutX="79.0" layoutY="29.0" prefHeight="16.0" prefWidth="32.0" text="Users" />
@@ -29,7 +29,7 @@
                 <TextArea fx:id="txtAreaReceipt" editable="false" layoutX="21.0" layoutY="314.0" prefHeight="97.0" prefWidth="749.0" />
                 <Button layoutX="643.0" layoutY="433.0" mnemonicParsing="false" text="Quit" onAction="#quit"/>
                 <Button layoutX="706.0" layoutY="433.0" mnemonicParsing="false" text="Save" onAction="#save"/>
-                <Button layoutX="62.0" layoutY="248.0" mnemonicParsing="false" text="New User" onAction="#addNewUser" />
+                <Button layoutX="62.0" layoutY="248.0" mnemonicParsing="false" text="New User" visible="false" />
                 <TextField fx:id="tfStartTime" layoutX="608.0" layoutY="115.0" />
                 <TextField fx:id="tfEndTime" layoutX="608.0" layoutY="160.0" />
                 <Label layoutX="23.0" layoutY="297.0" text="Receipt:" />

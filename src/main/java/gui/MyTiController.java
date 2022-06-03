@@ -9,6 +9,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.MenuBar;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import main.java.services.PriceMatrix;
@@ -25,6 +27,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class MyTiController implements Initializable, IDataSourceListener {
+
+    @FXML
+    protected AnchorPane rootAnchorPane;
 
     @FXML
     protected ListView lstDeparture;
@@ -61,6 +66,8 @@ public class MyTiController implements Initializable, IDataSourceListener {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        this.attachMenuBar();
+
         this.stationViewModel = new StationViewModel();
         this.userViewModel = new UserViewModel();
         this.priceMatrix = new PriceMatrix();
@@ -152,8 +159,7 @@ public class MyTiController implements Initializable, IDataSourceListener {
         alert.show();
     }
 
-    @FXML
-    public void addNewUser(ActionEvent actionEvent) throws IOException {
+    private void addNewUser() throws IOException {
 
         FXMLLoader fxmlLoader = new FXMLLoader(MyTiApplication.class.getClassLoader().getResource("user.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 585, 270);
@@ -171,6 +177,26 @@ public class MyTiController implements Initializable, IDataSourceListener {
 
     }
 
+    private void showReport() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(MyTiApplication.class.getClassLoader().getResource("report.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 750, 300);
+        Stage stage = new Stage();
+        stage.setTitle("Report");
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setScene(scene);
+        ReportController controller = fxmlLoader.getController();
+        controller.setUserViewModel(this.userViewModel);
+        controller.setUserTravelViewModel(this.userTravelViewModels);
+
+        stage.show();
+        stage.setOnCloseRequest((event) -> {
+            stage.close();
+        });
+    }
+
+    private void editUser() {
+
+    }
     @Override
     public void didDataSourceChanged() {
         this.showUsers(this.userViewModel.getOrderedPassengers());
@@ -297,5 +323,50 @@ public class MyTiController implements Initializable, IDataSourceListener {
         this.userTravelViewModels.put(userId, vm);
 
         return vm;
+    }
+
+    private void attachMenuBar() {
+        Menu menuFile = new Menu("File");
+        Menu menuUser = new Menu("User");
+
+        MenuItem menuNewUser = new MenuItem("New User");
+        menuNewUser.setOnAction(actionEvent -> {
+            try{
+                this.addNewUser();
+            } catch (Exception ex){
+                System.out.println(ex.toString());
+            }
+        });
+
+        MenuItem menuEditUser = new MenuItem("Edit User");
+        menuEditUser.setOnAction(actionEvent -> {
+            this.editUser();
+        });
+
+        menuUser.getItems().addAll(menuNewUser, menuEditUser);
+
+        MenuItem menuReport = new MenuItem("Report");
+        menuReport.setOnAction(actionEvent ->{
+            try {
+                this.showReport();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        MenuItem menuSave = new MenuItem("Save");
+        menuSave.setOnAction(actionEvent -> {
+            this.save(actionEvent);
+        });
+
+        MenuItem menuQuit = new MenuItem("Quit");
+        menuQuit.setOnAction(actionEvent -> {
+            this.quit(actionEvent);
+        });
+
+        menuFile.getItems().addAll(menuReport, menuSave, menuQuit);
+
+        MenuBar menuBar = new MenuBar(menuFile, menuUser);
+        this.rootAnchorPane.getChildren().add(menuBar);
     }
 }

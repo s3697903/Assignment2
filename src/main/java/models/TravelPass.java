@@ -56,7 +56,7 @@ public class TravelPass {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         this.journeies.forEach((journey) -> {
-            sb.append(String.format("StartTime: %s EndTime: %s Departure: %s Arrival: %s", Common.convertLocalDateTimeToString(journey.getStartTime()), Common.convertLocalDateTimeToString(journey.getEndDate()), journey.getDepartureStation().getName(), journey.getArrivalStation().getName()));
+            sb.append(String.format("Cost: $%.2f StartTime: %s EndTime: %s Departure: %s Arrival: %s", this.ticketCost, Common.convertLocalDateTimeToString(journey.getStartTime()), Common.convertLocalDateTimeToString(journey.getEndDate()), journey.getDepartureStation().getName(), journey.getArrivalStation().getName()));
             sb.append("\n");
         });
 
