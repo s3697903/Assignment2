@@ -63,7 +63,13 @@ public class MyTiController implements Initializable, IDataSourceListener {
     private Station selectedArrival = null;
     private LocalDateTime startDatetime = null;
     private LocalDateTime endDatetime = null;
+    private Stage stage = null;
+    private MenuBar menuBar = null;
 
+    public void setStage(Stage stage) {
+        this.stage = stage;
+        this.updateMenuBarWidth();
+    }
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.attachMenuBar();
@@ -194,8 +200,20 @@ public class MyTiController implements Initializable, IDataSourceListener {
         });
     }
 
-    private void editUser() {
+    private void editUser() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(MyTiApplication.class.getClassLoader().getResource("edituser.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 620, 250);
+        Stage stage = new Stage();
+        stage.setTitle("Edit User");
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setScene(scene);
+        main.java.gui.EditUserController controller = fxmlLoader.getController();
+        controller.setUserViewModel(this.userViewModel);
 
+        stage.show();
+        stage.setOnCloseRequest((event) -> {
+            stage.close();
+        });
     }
     @Override
     public void didDataSourceChanged() {
@@ -340,7 +358,11 @@ public class MyTiController implements Initializable, IDataSourceListener {
 
         MenuItem menuEditUser = new MenuItem("Edit User");
         menuEditUser.setOnAction(actionEvent -> {
-            this.editUser();
+            try {
+                this.editUser();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         });
 
         menuUser.getItems().addAll(menuNewUser, menuEditUser);
@@ -366,7 +388,17 @@ public class MyTiController implements Initializable, IDataSourceListener {
 
         menuFile.getItems().addAll(menuReport, menuSave, menuQuit);
 
-        MenuBar menuBar = new MenuBar(menuFile, menuUser);
+        this.menuBar = new MenuBar(menuFile, menuUser);
+        this.updateMenuBarWidth();
         this.rootAnchorPane.getChildren().add(menuBar);
+    }
+
+    private void updateMenuBarWidth() {
+        if(this.stage != null) {
+            this.menuBar.prefWidthProperty().bind(stage.widthProperty());
+        }
+        else {
+            this.menuBar.setMinWidth(800);
+        }
     }
 }

@@ -26,7 +26,7 @@
                 <Label layoutX="530.0" layoutY="119.0" text="Start(HH:mm)" />
                 <Label layoutX="530.0" layoutY="164.0" text="End(HH:mm)" />
                 <Button layoutX="565.0" layoutY="219.0" mnemonicParsing="false" onAction="#purchaseTicket" prefHeight="26.0" prefWidth="207.0" text="Purchase" />
-                <TextArea fx:id="txtAreaReceipt" editable="false" layoutX="21.0" layoutY="314.0" prefHeight="97.0" prefWidth="749.0" />
+                <TextArea fx:id="txtAreaReceipt" editable="false" layoutX="21.0" layoutY="314.0" prefHeight="97.0" prefWidth="749.0" wrapText="true" />
                 <Button layoutX="643.0" layoutY="433.0" mnemonicParsing="false" text="Quit" onAction="#quit"/>
                 <Button layoutX="706.0" layoutY="433.0" mnemonicParsing="false" text="Save" onAction="#save"/>
                 <Button layoutX="62.0" layoutY="248.0" mnemonicParsing="false" text="New User" visible="false" />

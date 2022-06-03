@@ -1,5 +1,7 @@
 package main.java.models;
 
+import main.java.helpers.*;
+
 /**
  * the passenger model
  */
@@ -40,5 +42,9 @@ public class Passenger {
 
     public String getEmail() {
         return this.email;
+    }
+
+    public String toString() {
+        return String.format("userId: %s fullName: %s, type: %s, email: %s", this.userId, this.getFullName(), Common.convertPassengerTypeToLowerText(this.getUserType()), this.getEmail());
     }
 }

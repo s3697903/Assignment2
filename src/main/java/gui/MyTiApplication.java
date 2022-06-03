@@ -18,6 +18,9 @@ public class MyTiApplication extends Application {
         Scene scene = new Scene(fxmlLoader.load(), 800, 490);
         stage.setTitle("MyTi!");
         stage.setScene(scene);
+
+        MyTiController controller = (MyTiController)fxmlLoader.getController();
+        controller.setStage(stage);
         stage.show();
         stage.setOnCloseRequest((event) -> {
             Platform.exit();

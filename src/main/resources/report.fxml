@@ -15,7 +15,7 @@
             <children>
                <ListView fx:id="lstUser" layoutX="29.0" layoutY="43.0" prefHeight="200.0" prefWidth="147.0" />
                <Label layoutX="29.0" layoutY="26.0" text="Users:" />
-               <TextArea fx:id="taReport" editable="false" layoutX="200.0" layoutY="43.0" prefHeight="200.0" prefWidth="520.0" />
+               <TextArea fx:id="taReport" editable="false" layoutX="200.0" layoutY="43.0" prefHeight="200.0" prefWidth="520.0" wrapText="true" />
                <Button  fx:id="btnClose" layoutX="653.0" layoutY="257.0" mnemonicParsing="false" text="Close" onAction="#onClose"/>
             </children>
          </AnchorPane>
